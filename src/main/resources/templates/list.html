@@ -13,7 +13,7 @@
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
       <div class="container">
         <a class="navbar-brand" th:href="@{/solicitacao}"
-          >🏭 Sistema de Manutenção</a
+          >Sistema de Manutenção</a
         >
       </div>
     </nav>
@@ -70,6 +70,11 @@
                   >ABERTA</span
                 >
                 <span
+                  th:if="${solicitacao.status == 'EM_ANDAMENTO'}"
+                  class="badge bg-info text-white"
+                  >EM ANDAMENTO</span
+                >
+                <span
                   th:if="${solicitacao.status == 'FINALIZADA'}"
                   class="badge bg-success"
                   >FINALIZADA</span
@@ -83,7 +88,7 @@
                 >
                 </span>
                 <span
-                  th:if="${solicitacao.status == 'ABERTA'}"
+                  th:if="${solicitacao.status != 'FINALIZADA'}"
                   class="text-muted"
                   >-</span
                 >
@@ -96,17 +101,31 @@
                     >Ver</a
                   >
 
+                  <!-- Ações para ABERTA -->
+                  <form
+                    th:if="${solicitacao.status == 'ABERTA'}"
+                    class="d-inline"
+                    th:action="@{/solicitacao/in-progress/{id}(id=${solicitacao.id})}"
+                    method="POST"
+                  >
+                    <button type="submit" class="btn btn-outline-primary">
+                      Iniciar
+                    </button>
+                  </form>
+
+                  <!-- Ações para EM ANDAMENTO -->
                   <a
                     th:href="@{/solicitacao/finish/{id}(id=${solicitacao.id})}"
                     class="btn btn-outline-success"
-                    th:if="${solicitacao.status == 'ABERTA'}"
+                    th:if="${solicitacao.status == 'EM_ANDAMENTO'}"
                     >Finalizar</a
                   >
 
+                  <!-- Ações para ABERTA e EM ANDAMENTO -->
                   <a
                     th:href="@{/solicitacao/edit/{id}(id=${solicitacao.id})}"
                     class="btn btn-outline-secondary"
-                    th:if="${solicitacao.status == 'ABERTA'}"
+                    th:if="${solicitacao.status != 'FINALIZADA'}"
                     >Editar</a
                   >
 

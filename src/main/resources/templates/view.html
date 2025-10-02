@@ -34,6 +34,11 @@
                 >ABERTA</span
               >
               <span
+                th:if="${solicitacao.status == 'EM_ANDAMENTO'}"
+                class="badge bg-info fs-6"
+                >EM ANDAMENTO</span
+              >
+              <span
                 th:if="${solicitacao.status == 'FINALIZADA'}"
                 class="badge bg-success fs-6"
                 >FINALIZADA</span

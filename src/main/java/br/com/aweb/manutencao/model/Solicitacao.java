@@ -43,17 +43,15 @@ public class Solicitacao {
     private LocalDateTime dataHoraAbertura = LocalDateTime.now();
     
     @Column(length = 20, nullable = false)
-    private String status = "ABERTA";
+    private String status = "ABERTA"; // ABERTA, EM_ANDAMENTO, FINALIZADA
     
     @Column(nullable = true)
     private LocalDateTime dataHoraEncerramento;
     
-    // Campo adicional para observações da manutenção
     @Size(max = 500, message = "Observações não podem ultrapassar 500 caracteres")
     @Column(length = 500, nullable = true)
     private String observacoesManutencao;
     
-    // Campo adicional para identificar o responsável pela manutenção
     @Size(max = 100, message = "Nome do responsável não pode ultrapassar 100 caracteres")
     @Column(length = 100, nullable = true)
     private String responsavelManutencao;

@@ -48,7 +48,7 @@ public class SolicitacaoController {
     @GetMapping("/edit/{id}")
     public ModelAndView edit(@PathVariable Long id) {
         var solicitacao = solicitacaoRepository.findById(id);
-        if (solicitacao.isPresent() && "ABERTA".equals(solicitacao.get().getStatus()))
+        if (solicitacao.isPresent() && !"FINALIZADA".equals(solicitacao.get().getStatus()))
             return new ModelAndView("form", Map.of("solicitacao", solicitacao.get()));
         throw new ResponseStatusException(HttpStatus.NOT_FOUND);
     }
@@ -75,11 +75,26 @@ public class SolicitacaoController {
         return "redirect:/solicitacao";
     }
 
+    // Marcar como EM ANDAMENTO
+    @PostMapping("/in-progress/{id}")
+    public String inProgress(@PathVariable Long id) {
+        var optionalSolicitacao = solicitacaoRepository.findById(id);
+        if (optionalSolicitacao.isPresent() && "ABERTA".equals(optionalSolicitacao.get().getStatus())) {
+            var solicitacao = optionalSolicitacao.get();
+            solicitacao.setStatus("EM_ANDAMENTO");
+            solicitacaoRepository.save(solicitacao);
+            return "redirect:/solicitacao";
+        }
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+    }
+
     // Página para finalizar a solicitação
     @GetMapping("/finish/{id}")
     public ModelAndView finishPage(@PathVariable Long id) {
         var optionalSolicitacao = solicitacaoRepository.findById(id);
-        if (optionalSolicitacao.isPresent() && "ABERTA".equals(optionalSolicitacao.get().getStatus())) {
+        if (optionalSolicitacao.isPresent() && 
+            ("ABERTA".equals(optionalSolicitacao.get().getStatus()) || 
+             "EM_ANDAMENTO".equals(optionalSolicitacao.get().getStatus()))) {
             return new ModelAndView("finish", Map.of("solicitacao", optionalSolicitacao.get()));
         }
         throw new ResponseStatusException(HttpStatus.NOT_FOUND);
@@ -90,7 +105,9 @@ public class SolicitacaoController {
     public String finish(@PathVariable Long id, @Valid Solicitacao solicitacaoAtualizada, BindingResult result) {
         var optionalSolicitacao = solicitacaoRepository.findById(id);
         
-        if (optionalSolicitacao.isPresent() && "ABERTA".equals(optionalSolicitacao.get().getStatus())) {
+        if (optionalSolicitacao.isPresent() && 
+            ("ABERTA".equals(optionalSolicitacao.get().getStatus()) || 
+             "EM_ANDAMENTO".equals(optionalSolicitacao.get().getStatus()))) {
             if (result.hasErrors()) {
                 return "finish";
             }

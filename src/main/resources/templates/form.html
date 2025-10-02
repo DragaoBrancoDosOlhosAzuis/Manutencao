@@ -79,6 +79,30 @@
                   </div>
                 </div>
 
+                <!-- Campo de Status (apenas para edição) -->
+                <div th:if="${solicitacao.id}" class="mb-3">
+                  <label for="status" class="form-label"
+                    >Status da Solicitação</label
+                  >
+                  <select class="form-select" id="status" th:field="*{status}">
+                    <option value="ABERTA">
+                      ABERTA - Aguardando atendimento
+                    </option>
+                    <option value="EM_ANDAMENTO">
+                      EM ANDAMENTO - Em processo de manutenção
+                    </option>
+                    <option value="FINALIZADA" disabled>
+                      FINALIZADA - Use o botão "Finalizar"
+                    </option>
+                  </select>
+                  <div class="form-text">
+                    <strong>ABERTA:</strong> Aguardando início dos trabalhos<br />
+                    <strong>EM ANDAMENTO:</strong> Manutenção em processo<br />
+                    <strong>FINALIZADA:</strong> Use o botão "Finalizar" para
+                    concluir
+                  </div>
+                </div>
+
                 <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                   <button type="submit" class="btn btn-primary">
                     Salvar Solicitação
