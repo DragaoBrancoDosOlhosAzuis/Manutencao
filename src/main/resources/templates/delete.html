@@ -15,7 +15,7 @@
   <body>
     <nav class="navbar bg-dark border-bottom border-body" data-bs-theme="dark">
       <div class="container-fluid">
-        <a class="navbar-brand" th:href="@{/manutencao}"
+        <a class="navbar-brand" th:href="@{/solicitacao}"
           >Sistema de Manutenção</a
         >
       </div>
@@ -26,16 +26,16 @@
 
       <p>
         Tem certeza que deseja excluir a solicitação de
-        <strong th:text="${manutencao.solicitante}"></strong>?
+        <strong th:text="${solicitacao.nomeSolicitante}"></strong>?
       </p>
       <p>
-        <strong>Problema:</strong>
-        <span th:text="${manutencao.descricaoProblema}"></span>
+        <strong>Descrição:</strong>
+        <span th:text="${solicitacao.descricaoProblema}"></span>
       </p>
 
       <form method="POST">
         <button type="submit" class="btn btn-danger">Excluir</button>
-        <a th:href="@{/manutencao}" class="btn btn-primary">Cancelar</a>
+        <a th:href="@{/solicitacao}" class="btn btn-primary">Cancelar</a>
       </form>
     </main>
     <script

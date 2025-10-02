@@ -7,147 +7,120 @@
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
       rel="stylesheet"
-      integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
-      crossorigin="anonymous"
     />
   </head>
-
   <body>
-    <nav class="navbar bg-dark border-bottom border-body" data-bs-theme="dark">
-      <div class="container-fluid">
-        <a class="navbar-brand" th:href="@{/manutencao}"
-          >Sistema de Manutenção</a
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <div class="container">
+        <a class="navbar-brand" th:href="@{/solicitacao}"
+          >🏭 Sistema de Manutenção</a
         >
       </div>
     </nav>
-    <main class="container">
-      <h1>Solicitações de Manutenção</h1>
 
-      <table class="table" th:unless="${#lists.isEmpty(manutencoes)}">
-        <thead>
-          <tr>
-            <th scope="col">#</th>
-            <th scope="col">Solicitante</th>
-            <th scope="col">Local/Setor</th>
-            <th scope="col">Descrição do Problema</th>
-            <th scope="col">Data Solicitação</th>
-            <th scope="col">Prioridade</th>
-            <th scope="col">Status</th>
-            <th scope="col">Data Encerramento</th>
-            <th scope="col">Ações</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr th:each="manutencao : ${manutencoes}">
-            <th scope="row" th:text="${manutencao.id}">---</th>
-            <td th:text="${manutencao.solicitante}">---</td>
-            <td th:text="${manutencao.localSetor}">---</td>
-            <td th:text="${manutencao.descricaoProblema}">---</td>
-            <td th:text="${#temporals.format(manutencao.dataSolicitacao)}">
-              ---
-            </td>
-            <td>
-              <span th:switch="${manutencao.prioridade}" class="badge">
-                <span th:case="BAIXA" class="badge bg-secondary">Baixa</span>
-                <span th:case="MEDIA" class="badge bg-info">Média</span>
-                <span th:case="ALTA" class="badge bg-warning">Alta</span>
-                <span th:case="URGENTE" class="badge bg-danger">Urgente</span>
-              </span>
-            </td>
-            <td>
-              <span th:switch="${manutencao.status}" class="badge">
-                <span th:case="ABERTA" class="badge bg-primary">Aberta</span>
-                <span th:case="EM_ANDAMENTO" class="badge bg-warning"
-                  >Em Andamento</span
-                >
-                <span th:case="CONCLUIDA" class="badge bg-success"
-                  >Concluída</span
-                >
-                <span th:case="CANCELADA" class="badge bg-secondary"
-                  >Cancelada</span
-                >
-              </span>
-            </td>
-            <td>
-              <span
-                th:if="${manutencao.dataEncerramento != null}"
-                th:text="${#temporals.format(manutencao.dataEncerramento)}"
-                >---</span
-              >
-              <span th:if="${manutencao.dataEncerramento == null}">-</span>
-            </td>
-            <td>
-              <form
-                class="d-inline"
-                th:action="@{/manutencao/iniciar/{id}(id=${manutencao.id})}"
-                method="POST"
-              >
-                <button
-                  type="submit"
-                  class="btn btn-sm btn-warning mb-1"
-                  th:if="${manutencao.status.name() == 'ABERTA'}"
-                >
-                  Iniciar
-                </button>
-              </form>
+    <main class="container mt-4">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Solicitações de Manutenção</h1>
+        <a th:href="@{/solicitacao/create}" class="btn btn-primary"
+          >Nova Solicitação</a
+        >
+      </div>
 
-              <form
-                class="d-inline"
-                th:action="@{/manutencao/concluir/{id}(id=${manutencao.id})}"
-                method="POST"
-              >
-                <button
-                  type="submit"
-                  class="btn btn-sm btn-success mb-1"
-                  th:if="${manutencao.status.name() == 'EM_ANDAMENTO' or manutencao.status.name() == 'ABERTA'}"
-                >
-                  Concluir
-                </button>
-              </form>
-
-              <form
-                class="d-inline"
-                th:action="@{/manutencao/cancelar/{id}(id=${manutencao.id})}"
-                method="POST"
-              >
-                <button
-                  type="submit"
-                  class="btn btn-sm btn-secondary mb-1"
-                  th:if="${manutencao.status.name() != 'CONCLUIDA' and manutencao.status.name() != 'CANCELADA'}"
-                >
-                  Cancelar
-                </button>
-              </form>
-
-              <a
-                th:href="@{/manutencao/edit/{id}(id=${manutencao.id})}"
-                class="btn btn-sm btn-info mb-1"
-                th:if="${manutencao.status.name() != 'CONCLUIDA'}"
-                >Editar</a
-              >
-
-              <a
-                th:href="@{/manutencao/delete/{id}(id=${manutencao.id})}"
-                class="btn btn-sm btn-danger mb-1"
-                >Excluir</a
-              >
-            </td>
-          </tr>
-        </tbody>
-      </table>
-
-      <p th:if="${#lists.isEmpty(manutencoes)}">
+      <div th:if="${#lists.isEmpty(solicitacoes)}" class="alert alert-info">
         Nenhuma solicitação de manutenção cadastrada.
-      </p>
+      </div>
 
-      <a th:href="@{/manutencao/create}" class="btn btn-sm btn-primary"
-        >Nova Solicitação</a
-      >
+      <div th:unless="${#lists.isEmpty(solicitacoes)}" class="table-responsive">
+        <table class="table table-striped table-hover">
+          <thead class="table-dark">
+            <tr>
+              <th>#</th>
+              <th>Solicitante</th>
+              <th>Descrição do Problema</th>
+              <th>Data/Hora Abertura</th>
+              <th>Status</th>
+              <th>Data/Hora Encerramento</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr th:each="solicitacao : ${solicitacoes}">
+              <td th:text="${solicitacao.id}"></td>
+              <td th:text="${solicitacao.nomeSolicitante}"></td>
+              <td>
+                <span
+                  th:if="${#strings.length(solicitacao.descricaoProblema) > 50}"
+                >
+                  [[${#strings.substring(solicitacao.descricaoProblema, 0,
+                  50)}...]]
+                </span>
+                <span
+                  th:unless="${#strings.length(solicitacao.descricaoProblema) > 50}"
+                >
+                  [[${solicitacao.descricaoProblema}]]
+                </span>
+              </td>
+              <td
+                th:text="${#temporals.format(solicitacao.dataHoraAbertura, 'dd/MM/yyyy HH:mm')}"
+              ></td>
+              <td>
+                <span
+                  th:if="${solicitacao.status == 'ABERTA'}"
+                  class="badge bg-warning text-dark"
+                  >ABERTA</span
+                >
+                <span
+                  th:if="${solicitacao.status == 'FINALIZADA'}"
+                  class="badge bg-success"
+                  >FINALIZADA</span
+                >
+              </td>
+              <td>
+                <span
+                  th:if="${solicitacao.status == 'FINALIZADA' && solicitacao.dataHoraEncerramento != null}"
+                  th:text="${#temporals.format(solicitacao.dataHoraEncerramento, 'dd/MM/yyyy HH:mm')}"
+                  class="text-success fw-bold"
+                >
+                </span>
+                <span
+                  th:if="${solicitacao.status == 'ABERTA'}"
+                  class="text-muted"
+                  >-</span
+                >
+              </td>
+              <td>
+                <div class="btn-group btn-group-sm">
+                  <a
+                    th:href="@{/solicitacao/view/{id}(id=${solicitacao.id})}"
+                    class="btn btn-outline-info"
+                    >Ver</a
+                  >
+
+                  <a
+                    th:href="@{/solicitacao/finish/{id}(id=${solicitacao.id})}"
+                    class="btn btn-outline-success"
+                    th:if="${solicitacao.status == 'ABERTA'}"
+                    >Finalizar</a
+                  >
+
+                  <a
+                    th:href="@{/solicitacao/edit/{id}(id=${solicitacao.id})}"
+                    class="btn btn-outline-secondary"
+                    th:if="${solicitacao.status == 'ABERTA'}"
+                    >Editar</a
+                  >
+
+                  <a
+                    th:href="@{/solicitacao/delete/{id}(id=${solicitacao.id})}"
+                    class="btn btn-outline-danger"
+                    >Excluir</a
+                  >
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </main>
-    <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
-      integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
-      crossorigin="anonymous"
-    ></script>
   </body>
 </html>
