@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title th:unless="${manutencao.id}">
+      Sistema de Manutenção - Nova Solicitação
+    </title>
+    <title th:if="${manutencao.id}">
+      Sistema de Manutenção - Editar Solicitação
+    </title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
+      crossorigin="anonymous"
+    />
+  </head>
+
+  <body>
+    <nav class="navbar bg-dark border-bottom border-body" data-bs-theme="dark">
+      <div class="container-fluid">
+        <a class="navbar-brand" th:href="@{/manutencao}"
+          >Sistema de Manutenção</a
+        >
+      </div>
+    </nav>
+
+    <main class="container">
+      <h1 th:unless="${manutencao.id}">Nova Solicitação de Manutenção</h1>
+      <h1 th:if="${manutencao.id}">Editar Solicitação de Manutenção</h1>
+
+      <form method="POST" th:object="${manutencao}">
+        <input type="hidden" th:field="*{id}" />
+
+        <div class="mb-3">
+          <label for="solicitante" class="form-label">Solicitante *</label>
+          <input
+            type="text"
+            class="form-control"
+            id="solicitante"
+            th:field="*{solicitante}"
+            placeholder="Digite o nome do solicitante"
+          />
+          <div
+            class="text-danger"
+            th:if="${#fields.hasErrors('solicitante')}"
+            th:errors="*{solicitante}"
+          >
+            Erro no campo solicitante
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label for="localSetor" class="form-label">Local/Setor *</label>
+          <input
+            type="text"
+            class="form-control"
+            id="localSetor"
+            th:field="*{localSetor}"
+            placeholder="Digite o local ou setor"
+          />
+          <div
+            class="text-danger"
+            th:if="${#fields.hasErrors('localSetor')}"
+            th:errors="*{localSetor}"
+          >
+            Erro no campo local/setor
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label for="descricaoProblema" class="form-label"
+            >Descrição do Problema *</label
+          >
+          <textarea
+            class="form-control"
+            id="descricaoProblema"
+            th:field="*{descricaoProblema}"
+            rows="4"
+            placeholder="Descreva detalhadamente o problema"
+          ></textarea>
+          <div
+            class="text-danger"
+            th:if="${#fields.hasErrors('descricaoProblema')}"
+            th:errors="*{descricaoProblema}"
+          >
+            Erro no campo descrição
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label for="prioridade" class="form-label">Prioridade *</label>
+          <select class="form-select" id="prioridade" th:field="*{prioridade}">
+            <option value="">Selecione a prioridade</option>
+            <option value="BAIXA">Baixa</option>
+            <option value="MEDIA">Média</option>
+            <option value="ALTA">Alta</option>
+            <option value="URGENTE">Urgente</option>
+          </select>
+          <div
+            class="text-danger"
+            th:if="${#fields.hasErrors('prioridade')}"
+            th:errors="*{prioridade}"
+          >
+            Erro no campo prioridade
+          </div>
+        </div>
+
+        <div class="mb-3" th:if="${manutencao.id}">
+          <label for="responsavelManutencao" class="form-label"
+            >Responsável pela Manutenção</label
+          >
+          <input
+            type="text"
+            class="form-control"
+            id="responsavelManutencao"
+            th:field="*{responsavelManutencao}"
+            placeholder="Nome do responsável pela manutenção"
+          />
+        </div>
+
+        <div class="mb-3" th:if="${manutencao.id}">
+          <label for="observacoes" class="form-label">Observações</label>
+          <textarea
+            class="form-control"
+            id="observacoes"
+            th:field="*{observacoes}"
+            rows="3"
+            placeholder="Observações adicionais"
+          ></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Salvar</button>
+        <a th:href="@{/manutencao}" class="btn btn-secondary">Cancelar</a>
+      </form>
+    </main>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>
